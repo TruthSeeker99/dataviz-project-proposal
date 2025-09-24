@@ -78,10 +78,8 @@ This prototype serves as an initial dashboard for **multi-dimensional data visua
 ---
 
 ## Open Questions
-
-* For the trust network, how best to visualize large graphs without losing clarity?  
-* For the climate data, which geographic base map format is best suited for integration (TopoJSON vs. GeoJSON)?  
 * For categorical-heavy attributes in the student dataset, which encoding best avoids overlap and ensures readability?  
+* For the trust network, how best to visualize large graphs without losing clarity?  
 
 ---
 
