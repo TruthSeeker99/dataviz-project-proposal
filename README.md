@@ -61,7 +61,7 @@ I drafted sketch ideas for each dataset:
 
 ## Prototypes
 
-### Prototype 1: Student Performance Visualization
+### Prototype 1: Student Performance Visualization ([VizHub](https://vizhub.com/TruthSeeker99/3be08474ddd14c40b5aaf770fd0d0f15))
 
 I’ve created a first prototype visualization for the **Student Performance dataset**.  
 It includes a scatter plot, line chart, grouped bar chart, and back-to-back bar chart (population pyramid), which address some of the core questions for this dataset.
@@ -78,7 +78,7 @@ This prototype serves as an initial dashboard for **multi-dimensional data visua
 
 ---
 
-### Prototype 2: US Mainland Temperature Visualization (Revision)
+### Prototype 2: US Mainland Temperature Visualization (Revision) ([VizHub](https://vizhub.com/TruthSeeker99/6a8bece00ce94155a1b19fab1bb581df))
 
 This is the **second version**, revised after **peer feedback**.  
 The previous week’s version delivered the initial choropleth-and-charts visualization. In this updated version, I **validated the dataset** to ensure it includes only the **continental U.S.**, and **removed regions without valid temperature records** to avoid misleading blanks.  
