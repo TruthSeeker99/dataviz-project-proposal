@@ -61,25 +61,48 @@ I drafted sketch ideas for each dataset:
 
 ## Prototypes
 
+### Prototype 1: Student Performance Visualization
+
 I’ve created a first prototype visualization for the **Student Performance dataset**.  
-It includes a scatter plot, line chart, grouped bar chart, and back-to-back bar chart (population pyramid), which address some of the core questions for this dataset.  
+It includes a scatter plot, line chart, grouped bar chart, and back-to-back bar chart (population pyramid), which address some of the core questions for this dataset.
 
 Prototype screenshot:  
-
 [![prototype](prototype.png)](prototype.png)
 
-This prototype serves as an initial dashboard for **multi-dimensional data visualization**. It combines four fundamental chart types to represent different aspects of the dataset and provide complementary perspectives on student performance.
+This prototype serves as an initial dashboard for **multi-dimensional data visualization**, combining four fundamental chart types to provide complementary perspectives on student performance.
 
-### Future Directions
-- **Flexible chart replacement**: expand beyond the initial four types  
-- **Customizable attributes**: allow users to choose which data fields to visualize  
-- **Interactive features**: enable cross-chart linking and coordinated highlighting for deeper insight  
+#### Future Directions
+- **Flexible chart replacement**: expand beyond the initial four chart types.  
+- **Customizable attributes**: allow users to select which data fields to visualize.  
+- **Interactive features**: enable cross-chart linking and coordinated highlighting for deeper exploration.
+
+---
+
+### Prototype 2: US Mainland Temperature Visualization (Revision)
+
+This is the **second version**, revised after **peer feedback**.  
+The previous week’s version delivered the initial choropleth-and-charts visualization. In this updated version, I **validated the dataset** to ensure it includes only the **continental U.S.**, and **removed regions without valid temperature records** to avoid misleading blanks.  
+Additionally, I **added a legend** to make the color scale and temperature distribution clearer.
+
+Prototype screenshot:  
+[![prototype](map_prototype.png)](map_prototype.png)
+
+On top of this cleaned dataset, I implemented **interactive multi-chart coordination**: selecting a state now displays that state’s **monthly average temperatures** and its **annual mean trend**.  
+To ensure comparability across states and time, I **fixed the global min–max ranges** for both monthly and yearly axes.  
+This improves cross-state consistency but slightly reduces the visibility of localized variations — something worth refining later.
+
+#### Future Directions
+- **Time-based filtering**: integrate a **time bar** at the bottom to switch between years and months dynamically, with both map and charts updating together.  
+- **Alternative encodings**: experiment with **map + bar chart hybrids** to reduce spatial bias — especially useful for datasets like population or economy, where area can distort perception.  
+- **Animated timeline**: explore **D3’s timeline and transition effects** to illustrate temporal evolution.  
+- **Analytical extensions**: add comparative metrics such as deviation from long-term averages or regional clustering for enhanced insight.
 
 ---
 
 ## Open Questions
 * For categorical-heavy attributes in the student dataset, which encoding best avoids overlap and ensures readability?  
 * For the trust network, how best to visualize large graphs without losing clarity?  
+* For the temperature map, what design adjustments could emphasize subtle seasonal patterns without sacrificing comparability — e.g., adaptive scaling or small multiples by month?  
 
 ---
 
