@@ -81,21 +81,38 @@ This prototype serves as an initial dashboard for **multi-dimensional data visua
 ### Prototype 2: US Mainland Temperature Visualization (Revision) ([VizHub](https://vizhub.com/TruthSeeker99/6a8bece00ce94155a1b19fab1bb581df))
 
 This is the **second version**, revised after **peer feedback**.  
-The previous week’s version delivered the initial choropleth-and-charts visualization. In this updated version, I **validated the dataset** to ensure it includes only the **continental U.S.**, and **removed regions without valid temperature records** to avoid misleading blanks.  
-Additionally, I **added a legend** to make the color scale and temperature distribution clearer.
+The previous week’s version delivered the initial choropleth-and-charts visualization. In this update, I **validated the dataset** to include only the **continental U.S.**, and **removed regions without valid temperature records** to avoid misleading blanks.  
+Additionally, I **added a legend** to clarify the color scale and temperature distribution.
 
 Prototype screenshot:  
 [![prototype](map_prototype.png)](map_prototype.png)
 
-On top of this cleaned dataset, I implemented **interactive multi-chart coordination**: selecting a state now displays that state’s **monthly average temperatures** and its **annual mean trend**.  
+On top of the cleaned dataset, I implemented **interactive multi-chart coordination**: selecting a state displays that state’s **monthly average temperatures** and its **annual mean trend**.  
 To ensure comparability across states and time, I **fixed the global min–max ranges** for both monthly and yearly axes.  
-This improves cross-state consistency but slightly reduces the visibility of localized variations — something worth refining later.
+This improves cross-state consistency but slightly reduces the visibility of localized variations—something to refine later.
+
+---
+
+#### What’s new in this revision (layout & controls)
+
+[![control panel](control_panel.png)](control_panel.png)
+
+- **Unified control panel**: All time controls (Month + Year dropdowns and Year-Range slider) are consolidated into a single panel **below the map**, and the **panel’s bottom is aligned with the bottom of the line chart on the right** for a clean visual baseline.  
+- **Consistent bindings**:  
+  - **Month dropdown** drives the map (annual average by default; any month selectable).  
+  - **Year dropdown** offers any single year **plus an “Averaged” option** (mean over the selected range).  
+  - **Year-Range slider** limits the time window for the line chart and the “Averaged” computations.  
+- **Stable scales**: Map legend range and chart axes remain fixed; only the rendered data slice changes.  
+- **Bar-chart cue**: When a month is selected, the corresponding bar is **highlighted with a border** to reinforce the selection.
+
+---
 
 #### Future Directions
-- **Time-based filtering**: integrate a **time bar** at the bottom to switch between years and months dynamically, with both map and charts updating together.  
-- **Alternative encodings**: experiment with **map + bar chart hybrids** to reduce spatial bias — especially useful for datasets like population or economy, where area can distort perception.  
-- **Animated timeline**: explore **D3’s timeline and transition effects** to illustrate temporal evolution.  
-- **Analytical extensions**: add comparative metrics such as deviation from long-term averages or regional clustering for enhanced insight.
+- **Responsiveness & layout polish**: tighter spacing, small-screen stack, and consistent label sizing.  
+- **Interaction clarity**: hover tooltips with exact values and “Averaged over YYYY–YYYY” badges.  
+- **Performance**: precompute yearly/monthly aggregates and debounce slider events.  
+- **Analytics**: add “delta vs. long-term mean” and simple anomaly flags; optional regional grouping.  
+- **Export & provenance**: snapshot current view (PNG/CSV) with parameter stamps for reproducibility.
 
 ---
 
