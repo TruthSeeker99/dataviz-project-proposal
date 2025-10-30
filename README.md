@@ -78,7 +78,7 @@ This prototype serves as an initial dashboard for **multi-dimensional data visua
 
 ---
 
-### Prototype 2: US Mainland Temperature Visualization (Revision) ([VizHub](https://vizhub.com/TruthSeeker99/6a8bece00ce94155a1b19fab1bb581df))
+### Prototype 2.1: US Mainland Temperature Visualization (Revision) ([VizHub](https://vizhub.com/TruthSeeker99/6a8bece00ce94155a1b19fab1bb581df))
 
 This is the **second version**, revised after **peer feedback**.  
 The previous week’s version delivered the initial choropleth-and-charts visualization. In this update, I **validated the dataset** to include only the **continental U.S.**, and **removed regions without valid temperature records** to avoid misleading blanks.  
@@ -113,6 +113,47 @@ This improves cross-state consistency but slightly reduces the visibility of loc
 - **Performance**: precompute yearly/monthly aggregates and debounce slider events.  
 - **Analytics**: add “delta vs. long-term mean” and simple anomaly flags; optional regional grouping.  
 - **Export & provenance**: snapshot current view (PNG/CSV) with parameter stamps for reproducibility.
+
+---
+
+### Prototype 2.2: US Mainland Temperature Visualization (Styling & Regional Update) ([VizHub](https://vizhub.com/TruthSeeker99/6a8bece00ce94155a1b19fab1bb581df))
+
+This update focuses on **visual refinement**, **interaction clarity**, and the **first step toward geographic grouping**.
+
+Prototype screenshot:  
+[![prototype](map2.2.png)](map2.2.png)
+
+---
+
+#### What’s new in this revision (visual & interaction updates)
+
+1. **Centralized style management**  
+   All visual styles are now maintained in a dedicated **CSS file**, which controls color palettes, axis design, typography, and component layout.  
+   This makes it easier to keep visual consistency across the map, bar chart, and trend line.
+
+2. **Enhanced hover and selection interaction**  
+   Added **tooltips** that appear on mouse hover, displaying detailed state-level temperature data.  
+   Clicking a state **pins** the tooltip and highlights that state with a neutral gray outline for persistent inspection.  
+   Hover and click interactions are now mutually exclusive to prevent duplicate tooltips.
+
+3. **Introduction of regional grouping (U.S. Census Divisions)**  
+   Each state is assigned to one of the **nine U.S. Census divisions**, as suggested by peer.  
+   While the map still encodes temperature with color fill, the **detailed information panel displays the division name**.  
+   A **passive legend** in the **bottom-right corner** shows all nine divisions; when a state is selected, its division row is highlighted and others fade for context.
+
+---
+
+#### Future Directions
+1. **Division-level aggregation and comparison**  
+   - Reflect selected state’s division with outline color.
+   - Add region-wide statistics and boundary outlines for each division.  
+   - Implement multi-state selection and division-level highlighting.
+
+2. **State, region, and time integration**  
+   - Develop an intuitive way to compare across **states, divisions, and temporal ranges** within the same dashboard.
+
+3. **Student Performance visualization interactivity**  
+   - Design and implement **interactive logic** for the student performance prototype to support brushing, filtering, and linked chart updates.
 
 ---
 
