@@ -157,6 +157,26 @@ Prototype screenshot:
 
 ---
 
+### Prototype 2.3: US Mainland Temperature Visualization (Refactor & Regional Preparation) ([VizHub](https://vizhub.com/TruthSeeker99/8a01251225e949428b316b31def1a4fd))
+
+This week’s work mainly focused on **code reorganization and structural cleanup** rather than new visual features.  
+After several rounds of incremental changes, the implementation had become **too complex and difficult to maintain**, so I decided to spend time restructuring the codebase for long-term stability and clarity.
+
+During this process, I found that earlier AI-assisted edits had caused performance and rendering issues — the editor even crashed (white screen) due to excessive logic nesting and computation load.  
+This experience showed that for **complex, data-driven visualizations**, relying on automatic code generation is unreliable and may introduce hidden dependencies or inefficiencies.  
+Therefore, the priority this week was to **manually refactor and document** each module to ensure stable execution and clearer interaction flow.
+
+Although the restructuring is still in progress, this step will make it easier to add the **regional division grouping** and subsequent interaction logic in future updates.
+
+---
+
+#### Future Directions
+- Continue refining and simplifying code modules to improve maintainability and performance.  
+- Reintroduce and extend the **U.S. regional division layer** with proper outlines and legend interaction.  
+- Explore **multi-level comparison** across states, divisions, and time periods once the structure is stable.  
+
+---
+
 ## Open Questions
 * For categorical-heavy attributes in the student dataset, which encoding best avoids overlap and ensures readability?  
 * For the trust network, how best to visualize large graphs without losing clarity?  
