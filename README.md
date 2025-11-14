@@ -177,6 +177,48 @@ Although the restructuring is still in progress, this step will make it easier t
 
 ---
 
+### Prototype 2.4: US Mainland Temperature Visualization (Architecture Reorganization) ([VizHub](https://vizhub.com/TruthSeeker99/8a01251225e949428b316b31def1a4fd))
+
+This week’s work focused on **project-wide structural reorganization** to establish a more maintainable and performant foundation for future development.  
+After cleaning up large portions of legacy logic, the visualization now follows a **clearer modular architecture**, with improved naming consistency and more predictable data flow.
+
+The most significant change in this revision is the **complete removal of direct DOM manipulation** that had accumulated across earlier prototypes.  
+All rendering logic has now been migrated to **proper D3 patterns** (joins, selections, update cycles), eliminating redundant DOM assumptions and reducing layout inconsistencies.  
+This shift immediately improved both **runtime performance** and **human readability**, making the codebase substantially easier to reason about.
+
+While the overall structure is now more coherent, some portions—especially older logic adapted from earlier AI-assisted edits—still contain **redundant or overly defensive code paths**.  
+These do not affect correctness but remain candidates for further simplification.  
+The next step will be to continue refining D3-specific components to maintain consistent patterns across modules.
+
+---
+
+#### What’s new in this revision (structural & rendering improvements)
+
+1. **Module reorganization with clearer responsibilities**  
+   The project is now split into logically independent modules (map, monthly chart, annual trend, interactions, utilities).  
+   Naming conventions have been standardized so that state, data, and rendering pipelines align more naturally.
+
+2. **Full migration to D3-based rendering**  
+   All remaining direct DOM update code has been replaced with proper D3 joins and grouped selections.  
+   This eliminates side-effects, reduces rendering drift, and ensures predictable behavior during interaction updates.
+
+3. **Performance and readability improvements**  
+   The cleaned layout hierarchy and reduced mutated DOM calls noticeably decrease reflow/repaint costs.  
+   Each rendering function is now easier to follow, and the overall code is much closer to being human-maintainable.
+
+4. **Preparation for division-level integration**  
+   The reorganized architecture makes it easier to introduce regional division logic without adding complexity or breaking existing rendering routines.
+
+---
+
+#### Future Directions
+- Integrate the **state-to-division grouping layer**, completing the structural groundwork for regional comparisons.  
+- Continue simplifying D3 rendering functions to fully unify join/update/exit patterns.  
+- Refine module boundaries and remove remaining redundant logic inherited from older versions.  
+- Move toward a fully maintainable, human-readable codebase that can be extended without relying on automated patches.
+
+---
+
 ## Open Questions
 * For categorical-heavy attributes in the student dataset, which encoding best avoids overlap and ensures readability?  
 * For the trust network, how best to visualize large graphs without losing clarity?  
