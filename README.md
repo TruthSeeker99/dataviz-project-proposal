@@ -219,6 +219,59 @@ The next step will be to continue refining D3-specific components to maintain co
 
 ---
 
+### Prototype 2.5: US Mainland Temperature Visualization (Division Integration & Coordination) ([VizHub](https://vizhub.com/TruthSeeker99/8a01251225e949428b316b31def1a4fd))
+
+This revision focuses on **making Census divisions a first-class interaction unit** while keeping **single-state selection as the core** of the dashboard.  
+Most of the work went into wiring divisions into the existing selection pipeline (map, legend, and details panel), rather than adding new visual encodings.
+
+Building on the refactored architecture from 2.3–2.4, this update cleans up earlier ad-hoc division code, unifies the highlight logic for states and divisions, and aligns division data with the structures already used by states and the national average.  
+This sets the stage for meaningful division-level comparisons without fragmenting the codebase again.
+
+---
+
+#### What’s new in this revision (division-level interaction)
+
+1. **Division added as an extended selection mode**  
+   Divisions are now treated as a multi-state extension of the existing state-selection logic, instead of a separate pathway.  
+   Selecting a division triggers a coordinated update of map highlighting, fading, and legend emphasis using the same rendering cycle as state selection.
+
+2. **Card behavior aligned between state and division**  
+   The right-hand details card for divisions now reuses the same rendering logic as the state card.  
+   Division-level aggregates are computed using the same schema as the national-average calculations, avoiding custom division-only data structures and keeping the UI consistent.
+
+3. **Selection reset made consistent**  
+   Deselecting (via blank click or keyboard) now clears both state and division selections in a unified way.  
+   Map strokes, faded states, legend emphasis, and the details card all reset to a clean default, fixing earlier cases where partial division state lingered.
+
+4. **Data model prepared for division-driven charts**  
+   Division aggregates are now organized in a format compatible with the state-level time-series data.  
+   This makes it feasible to plug divisions into the existing chart-update functions in the next iteration, rather than writing separate chart logic.
+
+---
+
+#### Future Directions
+
+- **Division–chart coordination**  
+  Extend the right-side bar chart and trend chart so that selecting a division drives the same coordinated updates currently implemented for single states.
+
+- **Division-specific card information**  
+  Add division-level summary cues on top of the reused state card layout (e.g., region-wide aggregates) to further distinguish division vs. state views without breaking the shared structure.
+
+- **Clarifying state vs. division modes**  
+  Strengthen visual cues that indicate whether the user is inspecting a single state or a multi-state division, while preserving a unified interaction pattern.
+
+- **Visual clarity improvements (from peer feedback)**  
+  Continue improving contrast by adding subtle internal state borders and refining the color palette so that regional and temporal differences are easier to read.
+
+- **Interaction guidance**  
+  Move beyond README-only explanations by designing clearer in-dashboard interaction cues, helping users understand what clicking and hovering will do.
+
+- **Narrative angle and trend interpretation**  
+  After the visuals and interactions are more stable, refine the overall narrative of the dashboard.  
+  As part of this, explore adding a fitted trend line as an optional layer on the annual chart to aid interpretation without overstating the warming signal.
+
+---
+
 ## Open Questions
 * For categorical-heavy attributes in the student dataset, which encoding best avoids overlap and ensures readability?  
 * For the trust network, how best to visualize large graphs without losing clarity?  
