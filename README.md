@@ -63,225 +63,355 @@ I drafted sketch ideas for each dataset:
 
 ### Prototype 1: Student Performance Visualization ([VizHub](https://vizhub.com/TruthSeeker99/3be08474ddd14c40b5aaf770fd0d0f15))
 
-I’ve created a first prototype visualization for the **Student Performance dataset**.  
-It includes a scatter plot, line chart, grouped bar chart, and back-to-back bar chart (population pyramid), which address some of the core questions for this dataset.
+I first built a dashboard for the **Student Performance dataset**.  
+It includes a scatter plot, line chart, grouped bar chart, and back-to-back bar charts to explore:
+
+- how study habits and family background relate to grades,
+- how distributions change across schools and genders,
+- how multiple charts can be linked through shared brushing and filtering.
 
 Prototype screenshot:  
-[![prototype](prototype.png)](prototype.png)
+[![Student performance prototype](imgs/prototype.png)](imgs/prototype.png)
 
-This prototype serves as an initial dashboard for **multi-dimensional data visualization**, combining four fundamental chart types to provide complementary perspectives on student performance.
-
-#### Future Directions
-- **Flexible chart replacement**: expand beyond the initial four chart types.  
-- **Customizable attributes**: allow users to select which data fields to visualize.  
-- **Interactive features**: enable cross-chart linking and coordinated highlighting for deeper exploration.
+This prototype established basic multi-view coordination patterns, but the rest of the report focuses on the more complex **U.S. temperature** dashboard.
 
 ---
 
-### Prototype 2.1: US Mainland Temperature Visualization (Revision) ([VizHub](https://vizhub.com/TruthSeeker99/6a8bece00ce94155a1b19fab1bb581df))
+### Prototype 2.1: US Mainland Temperature – Cleaned Data & Baseline View ([VizHub](https://vizhub.com/TruthSeeker99/6a8bece00ce94155a1b19fab1bb581df))
 
-This is the **second version**, revised after **peer feedback**.  
-The previous week’s version delivered the initial choropleth-and-charts visualization. In this update, I **validated the dataset** to include only the **continental U.S.**, and **removed regions without valid temperature records** to avoid misleading blanks.  
-Additionally, I **added a legend** to clarify the color scale and temperature distribution.
+The first temperature prototype targeted:
+
+- **Data validation & cleaning**
+  - Filtered the dataset to **continental U.S. states** only.
+  - Removed states/regions without valid temperature records to avoid misleading blank areas.
+  - Established consistent annual and monthly aggregates for each state.
+
+- **Baseline visualization**
+  - A **choropleth map** colored by annual or monthly average temperature.
+  - A **monthly bar chart** and **annual trend line** for the U.S. mainland.
+  - A global diverging color scale from cool blues to warm oranges/reds.
+
+- **Fixed global ranges**
+  - Both monthly and yearly charts use **shared min–max ranges** to make cross-state comparisons meaningful over time.
+
+This prototype proved that the dataset could support a coherent spatial–temporal dashboard, but the time controls and layout were still fragmented.
+
+---
+
+### Prototype 2.2: US Mainland Temperature – Layout & Unified Controls ([VizHub](https://vizhub.com/TruthSeeker99/6a8bece00ce94155a1b19fab1bb581df))
+
+In the next iteration, I focused on **layout and controls**, which is the part that was previously buried under “What’s new in this revision (layout & controls)” and is now promoted to its own prototype.
+
+Key changes:
+
+- **Unified control panel (bottom of the dashboard)**  
+  All time-related controls were moved into a single panel:
+  - **Select Month** dropdown:  
+    - `Annual Average` (default view).  
+    - `January … December` (specific months).
+  - **Select Year** dropdown:  
+    - `Averaged` (mean over the selected year range).  
+    - Individual years (1950–2021).
+  - **Select Year Range** slider:  
+    - Defines the year window used both for the line chart and for `Averaged` computations.
+
+- **Consistent bindings**
+  - **Map** is always driven by (Month, Year / Averaged, Year Range).  
+  - **Monthly bar chart** shows the selected region’s seasonal cycle.  
+  - **Annual trend chart** shows the corresponding annual series using the same global y-axis.
+
+- **Stable scales**
+  - Legend and chart axes are **fixed in numeric range**; only data slices change.
+  - Selecting month or year does not rescale axes, improving comparability.
+
+Example control panel view:  
+[![control panel](imgs/control_panel.png)](imgs/control_panel.png)
+
+This prototype transformed the map + charts into a **well-structured, time-control-driven dashboard**.
+
+---
+
+### Prototype 2.3: US Mainland Temperature – Styling & Interaction Clarity ([VizHub](https://vizhub.com/TruthSeeker99/8a01251225e949428b316b31def1a4fd))
+
+This revision emphasized **visual polish** and **interaction clarity**:
+
+- Improved typography, spacing, and color consistency across map and charts.
+- Sharpened labels and legend design to make the temperature encoding more legible.
+- Adjusted hover styles and highlighted states to avoid ambiguity about what is currently selected.
+- Prepared the layout to accommodate future regional grouping and detail panels.
 
 Prototype screenshot:  
-[![prototype](map_prototype.png)](map_prototype.png)
+[![US temperature prototype 2.3](imgs/map2.2.png)](imgs/map2.2.png)
 
-On top of the cleaned dataset, I implemented **interactive multi-chart coordination**: selecting a state displays that state’s **monthly average temperatures** and its **annual mean trend**.  
-To ensure comparability across states and time, I **fixed the global min–max ranges** for both monthly and yearly axes.  
-This improves cross-state consistency but slightly reduces the visibility of localized variations—something to refine later.
+At this stage, the dashboard looked much more like a finished product, but the internal architecture was still a mix of ad-hoc DOM manipulation and D3 logic.
 
 ---
 
-#### What’s new in this revision (layout & controls)
+### Prototype 2.4 & 2.5: US Mainland Temperature – Refactor & D3-Centric Architecture ([VizHub](https://vizhub.com/TruthSeeker99/8a01251225e949428b316b31def1a4fd))
 
-[![control panel](control_panel.png)](control_panel.png)
+Prototypes 2.4 and 2.5 focused on **structural reorganization** and **D3 unification**.
 
-- **Unified control panel**: All time controls (Month + Year dropdowns and Year-Range slider) are consolidated into a single panel **below the map**, and the **panel’s bottom is aligned with the bottom of the line chart on the right** for a clean visual baseline.  
-- **Consistent bindings**:  
-  - **Month dropdown** drives the map (annual average by default; any month selectable).  
-  - **Year dropdown** offers any single year **plus an “Averaged” option** (mean over the selected range).  
-  - **Year-Range slider** limits the time window for the line chart and the “Averaged” computations.  
-- **Stable scales**: Map legend range and chart axes remain fixed; only the rendered data slice changes.  
-- **Bar-chart cue**: When a month is selected, the corresponding bar is **highlighted with a border** to reinforce the selection.
+Major work in 2.4:
 
----
+- **Codebase refactor**
+  - Extracted repeated logic into reusable modules.
+  - Reduced deeply nested update paths that had accumulated during earlier AI-assisted patches.
+  - Cleaned up legacy assumptions that made the code fragile and hard to reason about.
 
-#### Future Directions
-- **Responsiveness & layout polish**: tighter spacing, small-screen stack, and consistent label sizing.  
-- **Interaction clarity**: hover tooltips with exact values and “Averaged over YYYY–YYYY” badges.  
-- **Performance**: precompute yearly/monthly aggregates and debounce slider events.  
-- **Analytics**: add “delta vs. long-term mean” and simple anomaly flags; optional regional grouping.  
-- **Export & provenance**: snapshot current view (PNG/CSV) with parameter stamps for reproducibility.
+- **D3-centered rendering**
+  - Migrated remaining ad-hoc DOM manipulation to proper D3 data joins and update patterns.
+  - Clarified how data flows from the processed dataset into each chart.
+  - Improved performance and stability by avoiding redundant recalculation and unnecessary DOM work.
+
+This stage did not dramatically change the visual appearance but laid the **foundation for reliable interaction and future extensions**.
 
 ---
 
-### Prototype 2.2: US Mainland Temperature Visualization (Styling & Regional Update) ([VizHub](https://vizhub.com/TruthSeeker99/6a8bece00ce94155a1b19fab1bb581df))
+### Prototype 2.6: US Mainland Temperature – Division Integration ([VizHub](https://vizhub.com/TruthSeeker99/8a01251225e949428b316b31def1a4fd))
 
-This update focuses on **visual refinement**, **interaction clarity**, and the **first step toward geographic grouping**.
+The next step was to introduce **Census divisions** as first-class citizens without breaking the state-centric core logic.
+
+Key changes:
+
+- **Division as an extended selection mode**
+  - Divisions are treated as a **multi-state extension** of the existing selection model.
+  - Single-state selection remains the primary focus; division selection is implemented on top of it rather than as a separate pathway.
+
+- **Division-aware legend and outlines**
+  - Each division gets a unique stroke color and label.
+  - Selecting a division (via legend) outlines its member states and fades others.
+  - The selection state is reflected consistently across map, charts, and detail panel.
+
+- **Shared data structures**
+  - Division-level aggregates reuse the **same structures** as states and national averages:
+    - no custom one-off arrays,
+    - no parallel pipelines.
+  - This keeps the architecture coherent and minimizes the risk of divergence between state vs. division logic.
 
 Prototype screenshot:  
-[![prototype](map2.2.png)](map2.2.png)
+[![US temperature prototype 2.5](imgs/map2.5.png)](imgs/map2.5.png)
+
+This prototype made division-level comparison possible while preserving the cleanliness of the refactored architecture.
 
 ---
 
-#### What’s new in this revision (visual & interaction updates)
+### Prototype 2.7: US Mainland Temperature – Final Coordinated Dashboard ([VizHub](https://vizhub.com/TruthSeeker99/8a01251225e949428b316b31def1a4fd))
 
-1. **Centralized style management**  
-   All visual styles are now maintained in a dedicated **CSS file**, which controls color palettes, axis design, typography, and component layout.  
-   This makes it easier to keep visual consistency across the map, bar chart, and trend line.
 
-2. **Enhanced hover and selection interaction**  
-   Added **tooltips** that appear on mouse hover, displaying detailed state-level temperature data.  
-   Clicking a state **pins** the tooltip and highlights that state with a neutral gray outline for persistent inspection.  
-   Hover and click interactions are now mutually exclusive to prevent duplicate tooltips.
+Final screenshot:  
+[![US temperature Final View](imgs/final_project.png)](imgs/final_project.png)
 
-3. **Introduction of regional grouping (U.S. Census Divisions)**  
-   Each state is assigned to one of the **nine U.S. Census divisions**, as suggested by peer.  
-   While the map still encodes temperature with color fill, the **detailed information panel displays the division name**.  
-   A **passive legend** in the **bottom-right corner** shows all nine divisions; when a state is selected, its division row is highlighted and others fade for context.
+The final revision turns the temperature visualization into a **fully coordinated, division-aware, month-aware dashboard**, and serves as the **final version** for the course (no further “next steps” are planned).
 
----
+New and consolidated features:
 
-#### Future Directions
-1. **Division-level aggregation and comparison**  
-   - Reflect selected state’s division with outline color.
-   - Add region-wide statistics and boundary outlines for each division.  
-   - Implement multi-state selection and division-level highlighting.
+- **Division-aware state outlines & passive legend**
+  - Single-state selection:
+    - The selected state gets a thick outline in its division’s color.
+    - Other states stay visible but slightly de-emphasized.
+  - Division selection via legend:
+    - All states in that division are outlined.
+    - Non-division states are faded.
+  - The legend itself:
+    - Highlights the active division row (bold, full opacity).
+    - Shows others at reduced opacity.
+    - Acts as a **passive cue** rather than an aggressive control panel.
 
-2. **State, region, and time integration**  
-   - Develop an intuitive way to compare across **states, divisions, and temporal ranges** within the same dashboard.
+- **State & division detail cards**
+  - Clicking a state or division shows a card with:
+    - Name and type (state / division / US Mainland),
+    - period summary (annual vs. month, year range),
+    - rank among states,
+    - difference vs. US Mainland,
+    - sample count.
+  - Cards are positioned:
+    - strictly inside the map region,
+    - never covering the division legend,
+    - adjusted to avoid covering the selected region.
 
-3. **Student Performance visualization interactivity**  
-   - Design and implement **interactive logic** for the student performance prototype to support brushing, filtering, and linked chart updates.
+- **Tight coordination between map, monthly bars, and annual trend**
+  - **Monthly bar chart**
+    - Hover: `{Month}: {value}°F`.
+    - Click: sets `Select Month` and updates map + trend chart.
+    - Double-click: resets to `Annual Average`.
+  - **Annual trend chart**
+    - Mode:
+      - `Annual Average` → annual mean per year.
+      - Specific month → that month’s mean per year.
+    - Hover: `{Year}: {value}°F` (+ region name when not mainland).
+    - Click: sets `Select Year` to that year (single-year slice).
+    - Double-click: resets `Select Year` to `Averaged`.
+  - **Control panel**
+    - Still the single source of truth for month, year, and year range.
+    - Now synchronized in both directions with the right-hand charts.
 
----
+- **Trendline and confidence band**
+  - For each current series, a **light dashed regression line** is drawn.
+  - A **very subtle CI band** using ±3σ of residuals gives a sense of long-term trend variability.
+  - Trendline and CI recompute whenever the month, range, or region changes.
 
-### Prototype 2.3: US Mainland Temperature Visualization (Refactor & Regional Preparation) ([VizHub](https://vizhub.com/TruthSeeker99/8a01251225e949428b316b31def1a4fd))
+- **Unified temperature encoding**
+  - Map, bars, and trendline all use the **same temperature color scale**.
+  - Monthly and annual modes share a consistent y-axis range for direct visual comparison.
 
-This week’s work mainly focused on **code reorganization and structural cleanup** rather than new visual features.  
-After several rounds of incremental changes, the implementation had become **too complex and difficult to maintain**, so I decided to spend time restructuring the codebase for long-term stability and clarity.
+- **Hover tooltips and annotations**
+  - Tooltips on both right-hand charts include boundary checks, so they never leave the chart area.
+  - All hints (map instructions, chart captions, control-panel explanations) are defined centrally and automatically wrapped to fit chart widths.
 
-During this process, I found that earlier AI-assisted edits had caused performance and rendering issues — the editor even crashed (white screen) due to excessive logic nesting and computation load.  
-This experience showed that for **complex, data-driven visualizations**, relying on automatic code generation is unreliable and may introduce hidden dependencies or inefficiencies.  
-Therefore, the priority this week was to **manually refactor and document** each module to ensure stable execution and clearer interaction flow.
-
-Although the restructuring is still in progress, this step will make it easier to add the **regional division grouping** and subsequent interaction logic in future updates.
-
----
-
-#### Future Directions
-- Continue refining and simplifying code modules to improve maintainability and performance.  
-- Reintroduce and extend the **U.S. regional division layer** with proper outlines and legend interaction.  
-- Explore **multi-level comparison** across states, divisions, and time periods once the structure is stable.  
-
----
-
-### Prototype 2.4: US Mainland Temperature Visualization (Architecture Reorganization) ([VizHub](https://vizhub.com/TruthSeeker99/8a01251225e949428b316b31def1a4fd))
-
-This week’s work focused on **project-wide structural reorganization** to establish a more maintainable and performant foundation for future development.  
-After cleaning up large portions of legacy logic, the visualization now follows a **clearer modular architecture**, with improved naming consistency and more predictable data flow.
-
-The most significant change in this revision is the **complete removal of direct DOM manipulation** that had accumulated across earlier prototypes.  
-All rendering logic has now been migrated to **proper D3 patterns** (joins, selections, update cycles), eliminating redundant DOM assumptions and reducing layout inconsistencies.  
-This shift immediately improved both **runtime performance** and **human readability**, making the codebase substantially easier to reason about.
-
-While the overall structure is now more coherent, some portions—especially older logic adapted from earlier AI-assisted edits—still contain **redundant or overly defensive code paths**.  
-These do not affect correctness but remain candidates for further simplification.  
-The next step will be to continue refining D3-specific components to maintain consistent patterns across modules.
-
----
-
-#### What’s new in this revision (structural & rendering improvements)
-
-1. **Module reorganization with clearer responsibilities**  
-   The project is now split into logically independent modules (map, monthly chart, annual trend, interactions, utilities).  
-   Naming conventions have been standardized so that state, data, and rendering pipelines align more naturally.
-
-2. **Full migration to D3-based rendering**  
-   All remaining direct DOM update code has been replaced with proper D3 joins and grouped selections.  
-   This eliminates side-effects, reduces rendering drift, and ensures predictable behavior during interaction updates.
-
-3. **Performance and readability improvements**  
-   The cleaned layout hierarchy and reduced mutated DOM calls noticeably decrease reflow/repaint costs.  
-   Each rendering function is now easier to follow, and the overall code is much closer to being human-maintainable.
-
-4. **Preparation for division-level integration**  
-   The reorganized architecture makes it easier to introduce regional division logic without adding complexity or breaking existing rendering routines.
+This prototype consolidates all previous work into a **clean, robust, and interpretable final dashboard**.
 
 ---
 
-#### Future Directions
-- Integrate the **state-to-division grouping layer**, completing the structural groundwork for regional comparisons.  
-- Continue simplifying D3 rendering functions to fully unify join/update/exit patterns.  
-- Refine module boundaries and remove remaining redundant logic inherited from older versions.  
-- Move toward a fully maintainable, human-readable codebase that can be extended without relying on automated patches.
+## Final Dashboard – Visual Design & Interaction Logic
+
+This section describes the final system from a **viewer’s perspective**: what the charts encode, how they interact, and what kinds of questions the dashboard supports.
+
+### 1 Layout Overview
+
+The dashboard is composed of:
+
+1. **Left:** US Mainland choropleth map  
+2. **Right top:** Monthly average bar chart  
+3. **Right bottom:** Annual temperature trend chart  
+4. **Bottom:** Unified control panel and division legend  
+
+Together, they support:
+
+- spatial comparison across states and divisions,
+- temporal exploration across months and years,
+- smooth transition between overview and detailed views.
 
 ---
 
-### Prototype 2.5: US Mainland Temperature Visualization (Division Integration & Coordination) ([VizHub](https://vizhub.com/TruthSeeker99/8a01251225e949428b316b31def1a4fd))
+### 2 Map – Spatial Overview & Entry Point
 
-This revision focuses on **making Census divisions a first-class interaction unit** while keeping **single-state selection as the core** of the dashboard.  
-Most of the work went into wiring divisions into the existing selection pipeline (map, legend, and details panel), rather than adding new visual encodings.
+**Encoding**
 
-Building on the refactored architecture from 2.3–2.4, this update cleans up earlier ad-hoc division code, unifies the highlight logic for states and divisions, and aligns division data with the structures already used by states and the national average.  
-This sets the stage for meaningful division-level comparisons without fragmenting the codebase again.
+- Each state is filled with a color representing its **average temperature**, under the current:
+  - month mode (`Annual Average` vs. specific month),
+  - year mode (`Averaged` over slider range vs. specific year).
 
----
+- A neutral base outline separates states; a **division-colored outline** is applied for selection.
 
-#### What’s new in this revision (division-level interaction)
+**Interaction**
 
-1. **Division added as an extended selection mode**  
-   Divisions are now treated as a multi-state extension of the existing state-selection logic, instead of a separate pathway.  
-   Selecting a division triggers a coordinated update of map highlighting, fading, and legend emphasis using the same rendering cycle as state selection.
+- Click a **state**:
+  - Highlights the state with a division-colored outline.
+  - Slightly fades other states.
+  - Updates the right-hand charts and detail card to this state.
 
-2. **Card behavior aligned between state and division**  
-   The right-hand details card for divisions now reuses the same rendering logic as the state card.  
-   Division-level aggregates are computed using the same schema as the national-average calculations, avoiding custom division-only data structures and keeping the UI consistent.
+- Click a **division legend row**:
+  - Outlines all states in that division.
+  - Fades non-division states.
+  - Updates charts and card to division-level aggregates.
 
-3. **Selection reset made consistent**  
-   Deselecting (via blank click or keyboard) now clears both state and division selections in a unified way.  
-   Map strokes, faded states, legend emphasis, and the details card all reset to a clean default, fixing earlier cases where partial division state lingered.
+- Click empty map / double-click in charts:
+  - Clears selection and returns to **US Mainland** as the reference.
 
-4. **Data model prepared for division-driven charts**  
-   Division aggregates are now organized in a format compatible with the state-level time-series data.  
-   This makes it feasible to plug divisions into the existing chart-update functions in the next iteration, rather than writing separate chart logic.
+**Detail card**
 
----
+- Shows:
+  - region name & type,
+  - period (month/annual, year or range),
+  - rank among states,
+  - Δ vs. U.S. mainland,
+  - sample count.
+- Always placed within the map area and away from the legend.
 
-#### Future Directions
-
-- **Division–chart coordination**  
-  Extend the right-side bar chart and trend chart so that selecting a division drives the same coordinated updates currently implemented for single states.
-
-- **Division-specific card information**  
-  Add division-level summary cues on top of the reused state card layout (e.g., region-wide aggregates) to further distinguish division vs. state views without breaking the shared structure.
-
-- **Clarifying state vs. division modes**  
-  Strengthen visual cues that indicate whether the user is inspecting a single state or a multi-state division, while preserving a unified interaction pattern.
-
-- **Visual clarity improvements (from peer feedback)**  
-  Continue improving contrast by adding subtle internal state borders and refining the color palette so that regional and temporal differences are easier to read.
-
-- **Interaction guidance**  
-  Move beyond README-only explanations by designing clearer in-dashboard interaction cues, helping users understand what clicking and hovering will do.
-
-- **Narrative angle and trend interpretation**  
-  After the visuals and interactions are more stable, refine the overall narrative of the dashboard.  
-  As part of this, explore adding a fitted trend line as an optional layer on the annual chart to aid interpretation without overstating the warming signal.
+The map provides a **geographically grounded overview** and an intuitive starting point for region-level questions.
 
 ---
 
-## Open Questions
-* For categorical-heavy attributes in the student dataset, which encoding best avoids overlap and ensures readability?  
-* For the trust network, how best to visualize large graphs without losing clarity?  
-* For the temperature map, what design adjustments could emphasize subtle seasonal patterns without sacrificing comparability — e.g., adaptive scaling or small multiples by month?  
+### 3 Division Legend – Mode Awareness
+
+The division legend serves as both a **status indicator** and **selection shortcut**:
+
+- Each row:
+  - a stroke-colored swatch matching the division outline,
+  - the division name,
+  - bold + full opacity when active, otherwise faded.
+- Clicking a row:
+  - activates division mode and drives all linked views.
+
+This makes the “state vs. division” distinction visible at all times without adding another heavy control panel.
 
 ---
 
-## Milestones
+### 4 Monthly Bar Chart – Seasonal Pattern
 
-* **Week 1–2**: Clean and preprocess all three datasets. Create static plots for Student Performance.  
-* **Week 3–4**: Build interactive prototype for Student Performance. Start Bitcoin network visualization.  
-* **Week 5–6**: Add U.S. Temperature spatio-temporal visualization with time slider.  
-* **Week 7 (Final)**: Polish all visualizations into one interactive portfolio piece. Prepare final video presentation.  
+The monthly bar chart answers:  
+**“What does the seasonal temperature cycle look like for this region?”**
+
+- X-axis: January–December  
+- Y-axis: temperature (same range as the trend chart)  
+- Bars: height encodes monthly mean temperature for the current region.
+
+**Interaction**
+
+- Hover: `{Month}: {value}°F`.  
+- Click:
+  - updates `Select Month`,
+  - drives the map and trend chart to that month.
+- Double-click:
+  - resets to `Annual Average`.
+
+This view reveals **seasonal highs and lows** and serves as a **direct controller** of the month dimension.
+
+---
+
+### 5 Annual Trend Chart – Long-term Dynamics
+
+The trend chart answers:  
+**“How has this region’s temperature evolved over decades?”**
+
+- X-axis: years (constrained by the slider).  
+- Y-axis: temperature in °F (shared with bar chart).  
+- Series:
+  - annual mean temperature per year, or
+  - a single month’s temperature per year when a month is selected.
+
+**Visual layers**
+
+1. Data points (and optional connecting line).  
+2. Linear regression trendline (light dashed).  
+3. ±3σ CI band (very faint background).
+
+**Interaction**
+
+- Hover: `{Year}: {value}°F` + region name when appropriate.  
+- Click a point:
+  - sets `Select Year` to that year, effectively “zooming into” a specific year.
+- Double-click:
+  - resets back to `Averaged`.
+
+The chart allows users to spot **long-term warming patterns** and **specific anomalous years**, while the trendline provides a gentle summary without overpowering the raw data.
+
+---
+
+### 6 Control Panel – Explicit Time & Reset Model
+
+The control panel makes the time model **explicit and reversible**:
+
+- **Select Month**
+  - `Annual Average` or any specific month.
+- **Select Year**
+  - `Averaged` or any specific year.
+- **Select Year Range** slider
+  - sets the range used for `Averaged` and for the trend chart domain.
+- **Reset**
+  - clears month/year/state/division selections and returns to the global baseline.
+
+Short text below the panel explains this behavior in plain language.
+
+---
+
+### 7 Annotations & UX Hints
+
+All annotations are centralized in a configuration object and rendered with **automatic line wrapping**:
+
+- Map hint: what clicking a state/division does.  
+- Monthly hint: what the bars represent and how click/hover behave.  
+- Trend hint: how to read the series and how click/double-click change the view.  
+- Control-panel hint: summarizes slider, dropdowns, and reset semantics.
+
+This reduces reliance on external documentation and makes the dashboard largely **self-explanatory**.
