@@ -264,6 +264,8 @@ This prototype consolidates all previous work into a **clean, robust, and interp
 
 ## Final Dashboard – Visual Design & Interaction Logic
 
+[Final Project Demo](https://www.youtube.com/watch?v=ABCDEFG1234)
+
 This section describes the final system from a **viewer’s perspective**: what the charts encode, how they interact, and what kinds of questions the dashboard supports.
 
 ### 1 Layout Overview
